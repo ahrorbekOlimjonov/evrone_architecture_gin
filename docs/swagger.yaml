@@ -1,0 +1,168 @@
+basePath: /v1
+definitions:
+  entity.Product:
+    properties:
+      category_id:
+        type: string
+      cost:
+        type: integer
+      count:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      discount:
+        type: integer
+      discount_cost:
+        type: integer
+      id:
+        type: string
+      name:
+        type: string
+      short_info:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  v1.response:
+    properties:
+      error:
+        example: message
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Using a translation service as an example
+  title: Go Clean Template API
+  version: "1.0"
+paths:
+  /product:
+    post:
+      consumes:
+      - application/json
+      description: Create a new product
+      operationId: create-product
+      parameters:
+      - description: Product request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Product'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entity.Product'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v1.response'
+      summary: Create product
+      tags:
+      - product
+    put:
+      consumes:
+      - application/json
+      description: Update a product by ID
+      operationId: update-product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Product request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/v1.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v1.response'
+      summary: Update product
+      tags:
+      - product
+  /product/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product by ID
+      operationId: delete-product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v1.response'
+      summary: Delete product
+      tags:
+      - product
+    get:
+      consumes:
+      - application/json
+      description: Get a product by ID
+      operationId: get-product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Product'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/v1.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/v1.response'
+      summary: Get product
+      tags:
+      - product
+swagger: "2.0"
