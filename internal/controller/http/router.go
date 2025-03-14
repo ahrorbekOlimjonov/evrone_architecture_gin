@@ -14,6 +14,9 @@ import (
 	v1 "ai-seller/internal/controller/http/v1"
 	"ai-seller/internal/usecase"
 	"ai-seller/pkg/logger"
+
+	"github.com/MarceloPetrucio/go-scalar-api-reference"
+
 )
 
 // NewRouter -.
@@ -27,6 +30,27 @@ func NewRouter(app *gin.Engine, l logger.Interface, t usecase.UseCases) {
 	// Options
 	app.Use(middleware.Logger(l))
 	app.Use(middleware.Recovery(l))
+
+	app.GET("/docs", func(ctx *gin.Context) {
+		htmlContent, err := scalar.ApiReferenceHTML(&scalar.Options{
+			SpecURL: "./docs/swagger.json",
+			CustomOptions: scalar.CustomOptions{
+				PageTitle: "Web playground API",
+			},
+			Theme:    scalar.ThemeBluePlanet,
+			DarkMode: true,
+			Layout:   scalar.LayoutModern,
+		})
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"error": "error loading scalar docs",
+			})
+		}
+
+		ctx.Header("Content-Type", "text/html")
+		ctx.String(http.StatusOK, htmlContent)
+
+	})
 
 	// Swagger
 	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
